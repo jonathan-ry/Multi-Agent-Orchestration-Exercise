@@ -1,0 +1,131 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="A contributor dashboard for tracking Project Pulse initiatives.">
+    <title>Project Pulse</title>
+    <link rel="stylesheet" href="styles.css">
+  </head>
+  <body>
+    <main class="dashboard">
+      <header class="header">
+        <div>
+          <p class="eyebrow">Contributor workspace</p>
+          <h1>Project Pulse</h1>
+          <p>See what is moving, who is leading it, and where contributors can help next.</p>
+        </div>
+        <p id="project-count" aria-live="polite">Loading projects...</p>
+      </header>
+
+      <section aria-labelledby="projects-heading">
+        <div class="section-heading">
+          <h2 id="projects-heading">Active projects</h2>
+          <p id="project-status" role="status">Loading project updates...</p>
+        </div>
+        <div id="project-grid" class="project-grid" aria-live="polite" aria-busy="true">
+          <p class="state-message">Loading project updates...</p>
+        </div>
+      </section>
+    </main>
+
+    <noscript>
+      <p class="state-message">Project Pulse needs JavaScript enabled to load project updates.</p>
+    </noscript>
+
+    <script>
+      const projectGrid = document.querySelector("#project-grid");
+      const projectCount = document.querySelector("#project-count");
+      const projectStatus = document.querySelector("#project-status");
+
+      function makeBadge(value, type) {
+        const badge = document.createElement("span");
+        const normalizedValue = String(value).toLowerCase().replace(/\s+/g, "-");
+        badge.className = `${type} ${normalizedValue}`;
+        badge.dataset[type] = normalizedValue;
+        badge.textContent = value;
+        return badge;
+      }
+
+      function makeField(label, value, className) {
+        const wrapper = document.createElement("div");
+        const labelElement = document.createElement("dt");
+        const valueElement = document.createElement("dd");
+        labelElement.textContent = label;
+        valueElement.className = className || "";
+        valueElement.textContent = value;
+        wrapper.append(labelElement, valueElement);
+        return wrapper;
+      }
+
+      function renderProjects(projects) {
+        projectGrid.replaceChildren();
+
+        if (projects.length === 0) {
+          projectGrid.innerHTML = '<p class="state-message">There are no projects to show yet.</p>';
+          projectCount.textContent = "No projects yet";
+          projectStatus.textContent = "No project updates available.";
+          return;
+        }
+
+        projects.forEach((project) => {
+          const article = document.createElement("article");
+          article.className = "project-card";
+
+          const cardHeader = document.createElement("header");
+          cardHeader.className = "project-header";
+          const heading = document.createElement("h3");
+          heading.textContent = project.name;
+          cardHeader.append(heading, makeBadge(project.status, "status"));
+
+          const summary = document.createElement("p");
+          summary.className = "description";
+          summary.textContent = project.summary || "A contributor-focused project update.";
+
+          const details = document.createElement("dl");
+          details.className = "project-details";
+          details.append(
+            makeField("Owner", project.owner),
+            makeField("Priority", project.priority, "priority"),
+            makeField("Recent activity", project.recentActivity, "activity-value")
+          );
+
+          article.append(cardHeader, summary, details);
+          projectGrid.append(article);
+        });
+
+        projectCount.textContent = `${projects.length} ${projects.length === 1 ? "project" : "projects"} in view`;
+        projectStatus.textContent = "Project updates loaded.";
+      }
+
+      async function loadProjects() {
+        try {
+          const response = await fetch("project-data.json");
+          if (!response.ok) {
+            throw new Error(`Project data request failed with status ${response.status}.`);
+          }
+
+          const data = await response.json();
+          if (!data || !Array.isArray(data.projects)) {
+            throw new Error("Project data must contain a projects array.");
+          }
+
+          renderProjects(data.projects);
+          projectGrid.setAttribute("aria-busy", "false");
+        } catch (error) {
+          projectGrid.replaceChildren();
+          const errorMessage = document.createElement("p");
+          errorMessage.className = "state-message";
+          errorMessage.setAttribute("role", "alert");
+          errorMessage.textContent = "Project updates could not be loaded. Check the local server and try again.";
+          projectGrid.append(errorMessage);
+          projectGrid.setAttribute("aria-busy", "false");
+          projectCount.textContent = "Project data unavailable";
+          projectStatus.textContent = error.message;
+        }
+      }
+
+      loadProjects();
+    </script>
+  </body>
+</html>

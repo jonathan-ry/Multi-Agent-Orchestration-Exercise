@@ -1,0 +1,36 @@
+{
+  "projects": [
+    {
+      "name": "Contributor Onboarding",
+      "owner": "Maya Chen",
+      "status": "In progress",
+      "recentActivity": "Published the first-time contributor checklist",
+      "priority": "High",
+      "summary": "Make the first contribution path clear, welcoming, and easy to complete."
+    },
+    {
+      "name": "API Reliability",
+      "owner": "Jordan Patel",
+      "status": "In progress",
+      "recentActivity": "Added latency alerts for the project activity endpoint",
+      "priority": "High",
+      "summary": "Improve service visibility and reduce interruptions for contributors."
+    },
+    {
+      "name": "Documentation Refresh",
+      "owner": "Alex Rivera",
+      "status": "Planned",
+      "recentActivity": "Collected feedback from the community support channel",
+      "priority": "Medium",
+      "summary": "Bring setup guides and contribution examples up to date."
+    },
+    {
+      "name": "Design System Starter Kit",
+      "owner": "Sam Okafor",
+      "status": "In progress",
+      "recentActivity": "Reviewed accessible color tokens with the frontend group",
+      "priority": "Medium",
+      "summary": "Give project teams reusable patterns for consistent, accessible interfaces."
+    }
+  ]
+}
