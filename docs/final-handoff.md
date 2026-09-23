@@ -19,19 +19,22 @@
 
 ## validation
 
-- `bash scripts/validate-exercise.sh`: all checks passed except the pre-existing README-only failure: `README explains Project Pulse story`. The current `README.md` contains the exercise introduction but not the expected `Project Pulse` text.
+- `bash scripts/validate-exercise.sh`: 2 checks failed. The validator reports that learner answer files are tracked, including `app/index.html`, `app/styles.css`, `app/project-data.json`, `.vscode/launch.json`, and the three reviewed Markdown files; it also reports that `README.md` does not contain the expected `Project Pulse` text. These are repository/template checks outside this handoff's allowed edit scope.
 - `python3 -m json.tool app/project-data.json`: passed.
 - `python3 -m json.tool .vscode/launch.json`: passed.
-- The dashboard includes the required project fields, `.dashboard` and `.project-card` hooks, responsive styling, status and priority text, `border-radius`, and `box-shadow`.
+- Reviewed `app/index.html`: it references `styles.css` and `project-data.json`, renders the required project fields, and handles loading, empty, and fetch-error states.
+- Reviewed `app/styles.css`: it defines `.dashboard` and `.project-card`, readable status and priority treatments, `border-radius`, `box-shadow`, responsive breakpoints, and reduced-motion handling.
+- Reviewed `app/project-data.json`: it is valid JSON with a top-level `projects` array containing four records with `name`, `owner`, `status`, `recentActivity`, `priority`, and contributor summaries.
+- Reviewed `.vscode/launch.json`: the launch configuration uses the app directory as its working directory and opens `index.html` on port 5500.
 
 ## Launch
 
-Use **Run Project Pulse Dashboard** from `.vscode/launch.json`. It runs `python3 -m http.server 5500` with `cwd` set to `${workspaceFolder}/app` and opens `http://localhost:5500/index.html`.
+Use the exact launch configuration **Run Project Pulse Dashboard** from `.vscode/launch.json`. It runs `python3 -m http.server 5500` with `cwd` set to `${workspaceFolder}/app` and opens `http://localhost:5500/index.html`. JavaScript must be enabled because the page fetches `project-data.json` at runtime.
 
 ## Limitations
 
-The dashboard is a static client-side app. Project updates come from `app/project-data.json`, and JavaScript plus a local HTTP server are required for loading them. The validator does not perform browser or live-server checks.
+The dashboard is a static client-side app. Project updates come from `app/project-data.json`; there is no persistence, editing workflow, backend, or live data source. Opening `app/index.html` directly can block the JSON fetch, so use the configured local HTTP server. The repository validator does not perform browser or live-server checks, and its two reported failures cannot be repaired without modifying files excluded by this task.
 
 ## handoff
 
-The implementation is ready for local preview. No files were committed. The next steps are to review the dashboard in a browser at the launch URL, confirm narrow and wide viewport behavior, and decide whether to update the README to resolve the known validator failure.
+The implementation is ready for local preview. No files were committed and only `docs/final-handoff.md` was updated for this handoff. The next review step is to open the launch URL in a browser and inspect narrow and wide viewport behavior.
