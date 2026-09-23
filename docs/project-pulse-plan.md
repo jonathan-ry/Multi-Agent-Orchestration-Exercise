@@ -68,3 +68,5 @@ python3 -m json.tool .vscode/launch.json >/dev/null
 ```
 
 Also inspect the Markdown documents for the required headings, agent names, model assignments, file paths, ownership, dependencies, parallel work, edge cases, and validation language. Review `app/index.html` and `app/styles.css` for the `.dashboard` and `.project-card` hooks, visible project fields, `border-radius`, and `box-shadow`. Use the **Run Project Pulse Dashboard** launch configuration to confirm that the served first page is `index.html`; when browser inspection is unavailable, verify the launch JSON fields and referenced files directly.
+
+.
